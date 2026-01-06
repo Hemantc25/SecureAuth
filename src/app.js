@@ -1,23 +1,22 @@
 import express from "express";
 import { healthRouter } from "./routes/health.routes.js";
+import { authRouter } from "./routes/auth.routes.js";
+import { requestLogger } from "./middlewares/requestLogger.middleware.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import { ApiError } from "./utils/ApiError.js";
 
-const app = express();
+export const app = express();
 
-// Built-in middleware to parse JSON
 app.use(express.json());
+app.use(requestLogger);
 
-// Routes
 app.use("/health", healthRouter);
+app.use("/auth", authRouter);
 
-// Centralized error handler (ALWAYS last)
-app.use(errorHandler);
-
-// Handle 404 errors for undefined routes
+// 404 handler
 app.use((req, res, next) => {
   next(new ApiError(404, `Route ${req.originalUrl} not found`));
 });
 
-export { app };
-
+// error handler — LAST
+app.use(errorHandler);

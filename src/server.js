@@ -1,7 +1,15 @@
 import { app } from "./app.js";
+import { env } from "./config/env.js";
+import { connectDB } from "./config/db.js";
 
-const PORT = process.env.PORT || 3000;
+const startServer = async () => {
+  await connectDB();
 
-app.listen(PORT, () => {
-  console.log(`SecureAuth server running on port ${PORT}`);
-});
+  app.listen(env.port, () => {
+    console.log(
+      `🚀 SecureAuth running in ${env.nodeEnv} mode on port ${env.port}`
+    );
+  });
+};
+
+startServer();
