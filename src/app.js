@@ -4,14 +4,24 @@ import { authRouter } from "./routes/auth.routes.js";
 import { requestLogger } from "./middlewares/requestLogger.middleware.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 import { ApiError } from "./utils/ApiError.js";
+import { protectedRouter } from "./routes/protected.routes.js";
+import { adminRouter } from "./routes/admin.routes.js";
 
 export const app = express();
 
+// middlewares
 app.use(express.json());
 app.use(requestLogger);
 
+// protected routes
 app.use("/health", healthRouter);
 app.use("/auth", authRouter);
+
+// Example of a protected route
+app.use("/protected", protectedRouter);
+
+// Example of an admin-only route
+app.use("/admin", adminRouter);
 
 // 404 handler
 app.use((req, res, next) => {
@@ -20,3 +30,4 @@ app.use((req, res, next) => {
 
 // error handler — LAST
 app.use(errorHandler);
+ 
