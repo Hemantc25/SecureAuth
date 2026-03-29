@@ -1,13 +1,14 @@
-import { logger } from "../config/logger.js";
+const isProduction = process.env.NODE_ENV === "production";
 
 export const requestLogger = (req, res, next) => {
-  logger.info("Incoming request", {
-    requestId: req.requestId,
-    method: req.method,
-    path: req.originalUrl,
-    ip: req.ip,
-    userId: req.user?.id,
-  });
+  if (!isProduction) {
+    console.log("Incoming request", {
+      method: req.method,
+      path: req.originalUrl,
+      userId: req.user?.id,
+      requestId: req.requestId,
+    });
+  }
 
   next();
 };

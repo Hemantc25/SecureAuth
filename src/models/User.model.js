@@ -6,31 +6,30 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      lowercase: true,
-      trim: true,
+      index: true,
     },
-
     passwordHash: {
       type: String,
       required: true,
     },
-
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
+      index: true,
     },
-
     isActive: {
       type: Boolean,
       default: true,
     },
   },
   {
-    timestamps: true, // adds createdAt & updatedAt
+    timestamps: true,
   }
 );
 
-// Prevent model overwrite in dev (nodemon)
-export const User =
-  mongoose.models.User || mongoose.model("User", userSchema);
+// Indexes
+userSchema.index({ createdAt: -1 });
+userSchema.index({ role: 1, createdAt: -1 });
+
+export const User = mongoose.model("User", userSchema);

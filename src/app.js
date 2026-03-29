@@ -19,7 +19,16 @@ export const app = express();
 /* ---------------- SECURITY ---------------- */
 
 app.disable("x-powered-by");
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy:
+      process.env.NODE_ENV === "production" ? undefined : false,
+  })
+);
+
+/* ---------------- PROXY SETTINGS ---------------- */
+
+app.set("trust proxy", 1);
 
 /* ---------------- GLOBAL MIDDLEWARE ---------------- */
 
